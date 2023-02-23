@@ -1,25 +1,41 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Driver : MonoBehaviour
 {
-    [SerializeField] private float moveSpeed;
-    [SerializeField] private float rotateSpeed;
+    [SerializeField] float moveSpeed = 25f;
+    [SerializeField] private float slowSpeed = 20f;
+    [SerializeField] private float boostSpeed = 30f;
+    [SerializeField] private float rotateSpeed = 200f;
 
-    // Start is called before the first frame update
     void Start()
     {
         moveSpeed = 30f;
         rotateSpeed = 300f;
     }
 
-    // Update is called once per frame
     void Update()
     {
         float rotateAmount = Input.GetAxis("Horizontal") * rotateSpeed * Time.deltaTime;
         float moveAmount = Input.GetAxis("Vertical") * moveSpeed * Time.deltaTime;
         transform.Rotate(0, 0, -rotateAmount);
         transform.Translate(0, moveAmount, 0);
+    }
+
+    private void OnTriggerEnter2D(Collider2D col)
+    {
+        if (col.CompareTag("Boost"))
+        {
+            Debug.Log("Zoooom!");
+            moveSpeed = boostSpeed;
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D col)
+    {
+        Debug.Log("Ouch!");
+        moveSpeed = slowSpeed;
     }
 }
